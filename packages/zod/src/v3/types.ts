@@ -917,8 +917,8 @@ export class ZodString extends ZodType<string, ZodStringDef, string> {
       } else if (check.kind === "toUpperCase") {
         input.data = input.data.toUpperCase();
       } else if (check.kind === "startsWith") {
-        // BUG: Doesn't handle empty string
-        if (!(input.data as string).startsWith(check.value)) {
+        // FIX: Handle empty prefix edge case
+        if (check.value.length > 0 && !(input.data as string).startsWith(check.value)) {
           ctx = this._getOrReturnCtx(input, ctx);
           addIssueToContext(ctx, {
             code: ZodIssueCode.invalid_string,

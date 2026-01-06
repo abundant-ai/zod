@@ -1021,7 +1021,9 @@ export const $ZodCheckStartsWith: core.$constructor<$ZodCheckStartsWith> = /*@__
     });
 
     inst._zod.check = (payload) => {
-      // BUG: Doesn't handle empty string
+      // FIX: Handle empty prefix edge case
+      if (def.prefix.length === 0) return;
+
       if (payload.value.startsWith(def.prefix)) return;
       payload.issues.push({
         origin: "string",
