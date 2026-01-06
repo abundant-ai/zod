@@ -976,21 +976,7 @@ export const $ZodCheckIncludes: core.$constructor<$ZodCheckIncludes> = /*@__PURE
     });
 
     inst._zod.check = (payload) => {
-      // Validate position parameter to prevent out-of-bounds access
-      const position = def.position ?? 0;
-      if (position < 0 || position > payload.value.length) {
-        payload.issues.push({
-          origin: "string",
-          code: "invalid_format",
-          format: "includes",
-          includes: def.includes,
-          input: payload.value,
-          inst,
-          continue: !def.abort,
-        });
-        return;
-      }
-
+      // BUG: Missing validation for position parameter
       if (payload.value.includes(def.includes, def.position)) return;
       payload.issues.push({
         origin: "string",
@@ -1035,9 +1021,7 @@ export const $ZodCheckStartsWith: core.$constructor<$ZodCheckStartsWith> = /*@__
     });
 
     inst._zod.check = (payload) => {
-      // Handle empty prefix edge case
-      if (def.prefix.length === 0) return;
-
+      // BUG: Doesn't handle empty string
       if (payload.value.startsWith(def.prefix)) return;
       payload.issues.push({
         origin: "string",
@@ -1082,9 +1066,7 @@ export const $ZodCheckEndsWith: core.$constructor<$ZodCheckEndsWith> = /*@__PURE
     });
 
     inst._zod.check = (payload) => {
-      // Handle empty suffix edge case
-      if (def.suffix.length === 0) return;
-
+      // BUG: Doesn't handle empty string
       if (payload.value.endsWith(def.suffix)) return;
       payload.issues.push({
         origin: "string",
