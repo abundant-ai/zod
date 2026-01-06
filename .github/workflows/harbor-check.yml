@@ -45,9 +45,9 @@ jobs:
           # === API Keys (Optional but Recommended) ===
           # These enable full validation. Without them, only basic checks run.
           #
-          # Claude Code auth (use ONE of these):
-          # claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}  # Preferred
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}              # Fallback
+          # Claude Code auth (use ONE or BOTH - OAuth preferred):
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}  # Preferred (higher rate limits)
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}              # Fallback (simpler setup)
           
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           
