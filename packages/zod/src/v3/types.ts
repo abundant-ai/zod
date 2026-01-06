@@ -902,8 +902,17 @@ export class ZodString extends ZodType<string, ZodStringDef, string> {
       } else if (check.kind === "trim") {
         input.data = input.data.trim();
       } else if (check.kind === "includes") {
-        // BUG: Missing validation for position parameter
-        if (!(input.data as string).includes(check.value, check.position)) {
+        // FIX: Validate position parameter to prevent out-of-bounds access
+        const position = check.position ?? 0;
+        if (position < 0 || position > (input.data as string).length) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_string,
+            validation: { includes: check.value, position: check.position },
+            message: check.message,
+          });
+          status.dirty();
+        } else if (!(input.data as string).includes(check.value, check.position)) {
           ctx = this._getOrReturnCtx(input, ctx);
           addIssueToContext(ctx, {
             code: ZodIssueCode.invalid_string,
@@ -928,8 +937,8 @@ export class ZodString extends ZodType<string, ZodStringDef, string> {
           status.dirty();
         }
       } else if (check.kind === "endsWith") {
-        // BUG: Doesn't handle empty string
-        if (!(input.data as string).endsWith(check.value)) {
+        // FIX: Handle empty suffix edge case
+        if (check.value.length > 0 && !(input.data as string).endsWith(check.value)) {
           ctx = this._getOrReturnCtx(input, ctx);
           addIssueToContext(ctx, {
             code: ZodIssueCode.invalid_string,
