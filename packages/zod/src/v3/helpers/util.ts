@@ -1,3 +1,7 @@
+/**
+ * Utility namespace for zod helper functions and types.
+ * Contains type assertions, object utilities, and validation helpers.
+ */
 export namespace util {
   type AssertEqual<T, U> = (<V>() => V extends T ? 1 : 2) extends <V>() => V extends U ? 1 : 2 ? true : false;
 
