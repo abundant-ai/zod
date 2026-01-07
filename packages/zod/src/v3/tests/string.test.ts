@@ -38,6 +38,31 @@ test("failing validations", () => {
   expect(() => endsWith.parse("x")).toThrow();
 });
 
+test("includes with invalid position", () => {
+  const negativePosition = z.string().includes("test", { position: -1 });
+  const tooLargePosition = z.string().includes("test", { position: 100 });
+
+  // Negative position should fail validation
+  expect(() => negativePosition.parse("test string")).toThrow();
+
+  // Position beyond string length should fail validation
+  expect(() => tooLargePosition.parse("short")).toThrow();
+});
+
+test("startsWith with empty prefix", () => {
+  const emptyPrefix = z.string().startsWith("");
+  // Empty prefix should always pass (all strings start with empty string)
+  emptyPrefix.parse("any string");
+  emptyPrefix.parse("");
+});
+
+test("endsWith with empty suffix", () => {
+  const emptySuffix = z.string().endsWith("");
+  // Empty suffix should always pass (all strings end with empty string)
+  emptySuffix.parse("any string");
+  emptySuffix.parse("");
+});
+
 test("email validations", () => {
   const validEmails = [
     `email@domain.com`,
